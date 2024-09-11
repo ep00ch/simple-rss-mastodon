@@ -1,3 +1,4 @@
+// Simple RSS reader for mastodon feeds
 var simpleRSSPlugin = (function() {
 	// get all the feed containers
 	var feedsNodes = document.querySelectorAll('[data-rss-feed]');
@@ -27,19 +28,26 @@ var simpleRSSPlugin = (function() {
 			var max = container.getAttribute('data-rss-max') || 10;
 
 			// New feed content container
-			var docFrag = document.createDocumentFragment();
+			var docFrag = document.createDocumentFragment().appendChild(document.createElement('ul'))
 
 			for (var i = 0; (i < data.items.length && i < max); i++) {
 				var e = data.items[i];
-				var tempNode = document.createElement('div');
 
-				var template = '<' + titleWrapper + '><a href="' + e.link + '">' + e.title + '</a></' + titleWrapper + '>' + e.content;
+				var tempNode = document.createElement('li');
+				// shorten pubDate and use locale format
+				var pubDate = new Date(e.pubDate.split(' ')[0]).toLocaleDateString()
+				// parse out the mastodon author from the link
+				var author = e.link.split('/')
+				author = author[3] + '@' + author[2]
+
+				var template = '<' + titleWrapper + '><a href="' + e.link + '">' + pubDate + ' - ' + e.title + author + '</a></' + titleWrapper + ' > ' + ' <div class="feed-content"> ' + e.content + '</div > ';
 				if (addLink === 'false') {
 					template = '<' + titleWrapper + '>' + e.title + '</' + titleWrapper + '>' + e.content;
 				}
-
+				if (e.enclosure.link && e.enclosure.type.startsWith('image') && e.enclosure.rating.value == 'nonadult') {
+					template += '<br><img class="feed-img" src="' + e.enclosure.link + '" alt="unavailable - open link for complete post, including alt tags">'
+				}
 				tempNode.innerHTML = template;
-
 				docFrag.appendChild(tempNode);
 			}
 
