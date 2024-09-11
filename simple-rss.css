@@ -1,0 +1,23 @@
+/* Widgets
+   Styles that work well for a blogger.com sidebar widget.
+----------------------------------------------- */
+.feed-content {
+    width: 100%;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 6;
+    display: -webkit-box;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    blockquote {
+        padding-left: 1em;
+        margin-inline-start: 0em;
+        border-left: 3px solid $(widget.link.color); /*Specify a color like #9baec8 if not using blogger.com variables.*/
+        white-space: normal;
+    }
+}
+
+.feed-img {
+    width: 100%;
+    height: 138px;
+    object-fit: cover;
+}
